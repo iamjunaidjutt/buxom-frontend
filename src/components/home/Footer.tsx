@@ -10,6 +10,7 @@ import {
 import logo from "@/assets/logos/buxom-logo.webp";
 import SecondaryBtn from "@/components/ui/SecondaryBtn";
 import { Separator } from "@/components/ui/separator";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
 	return (
@@ -69,19 +70,19 @@ const Footer = () => {
 						Sign up for 15% off plus access to exclusive promos,
 						special offers, the hottest looks and artistry tips.
 					</p>
-					<SecondaryBtn>SIGN UP</SecondaryBtn>
+					<SecondaryBtn type="button">SIGN UP</SecondaryBtn>
 				</div>
 				<div className="flex gap-28">
 					<div className="flex flex-col gap-2">
 						<p className="text-sm tracking-widest font-normal">
 							ABOUT US
 						</p>
-						<a
-							href="#"
+						<Link
+							to="/about"
 							className="font-bold hover:text-gray-300 transition duration-200"
 						>
 							About BUXOM
-						</a>
+						</Link>
 						<a
 							href="#"
 							className="font-bold hover:text-gray-300 transition duration-200"
@@ -93,12 +94,12 @@ const Footer = () => {
 						<p className="text-sm tracking-widest font-normal">
 							MY ACCOUNT
 						</p>
-						<a
-							href="#"
+						<Link
+							to="/sign-in"
 							className="font-bold hover:text-gray-300 transition duration-200"
 						>
 							Sign In
-						</a>
+						</Link>
 						<a
 							href="#"
 							className="font-bold hover:text-gray-300 transition duration-200"
@@ -110,36 +111,36 @@ const Footer = () => {
 						<p className="text-sm tracking-widest font-normal">
 							SUPPORT
 						</p>
-						<a
-							href="#"
+						<Link
+							to="tel:844-383-3463"
 							className="font-bold hover:text-gray-300 transition duration-200"
 						>
 							844-383-3463
-						</a>
-						<a
-							href="#"
+						</Link>
+						<Link
+							to="/contact-us#"
 							className="font-bold hover:text-gray-300 transition duration-200"
 						>
 							Contact Us
-						</a>
-						<a
-							href="#"
+						</Link>
+						<Link
+							to="/shipping-and-return"
 							className="font-bold hover:text-gray-300 transition duration-200 w-3/4"
 						>
 							Shipping & Return Policy
-						</a>
-						<a
-							href="#"
+						</Link>
+						<Link
+							to="/faqs"
 							className="font-bold hover:text-gray-300 transition duration-200"
 						>
 							FAQs
-						</a>
-						<a
-							href="#"
+						</Link>
+						<Link
+							to="/store-locator#"
 							className="font-bold hover:text-gray-300 transition duration-200"
 						>
 							Find a Store
-						</a>
+						</Link>
 						<a
 							href="#"
 							className="font-bold hover:text-gray-300 transition duration-200"

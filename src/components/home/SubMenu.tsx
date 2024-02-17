@@ -1,6 +1,7 @@
 import { IoSearch, IoBagHandleSharp } from "react-icons/io5";
 
 import BarLogo from "@/assets/logos/buxom-logo.webp";
+import { Link } from "react-router-dom";
 
 const SubMenu = () => {
 	return (
@@ -19,10 +20,10 @@ const SubMenu = () => {
 					ARTISTRY
 				</a>
 			</div>
-			<div className="">
-				<a href="#">
+			<div>
+				<Link to="/">
 					<img src={BarLogo} alt="Buxom Logo" />
-				</a>
+				</Link>
 			</div>
 			<div className="space-x-3">
 				<a href="#" className="border rounded-full inline-block p-2">

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import SupportMenu from "@/components/home/SupportMenu";
+import { Link } from "react-router-dom";
 
 const MainBar = () => {
 	const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -27,7 +28,7 @@ const MainBar = () => {
 		},
 	];
 	return (
-		<div className="w-full py-1 flex items-center">
+		<div className="w-full py-1 flex items-center" id="#">
 			<div className="max-w-lg ml-[42rem]">
 				<Carousel>
 					<CarouselContent>
@@ -52,17 +53,17 @@ const MainBar = () => {
 				</Carousel>
 			</div>
 			<div className="ml-[18rem]">
-				<a
-					href="#"
+				<Link
+					to="/sign-in"
 					className="text-sm font-medium text-center text-white hover:text-gray-300"
 				>
 					Sign&nbsp;In
-				</a>
+				</Link>
 				<span className="text-sm font-medium text-center text-white mx-3">
 					|
 				</span>
-				<a
-					href="#"
+				<Link
+					to="#"
 					className={`text-sm font-medium text-center text-white inline-flex items-center ${
 						isClicked ? "relative" : "hover:text-gray-300"
 					}`}
@@ -75,7 +76,7 @@ const MainBar = () => {
 						<IoMdArrowDropdown size={17} />
 					)}
 					{isClicked && <SupportMenu />}
-				</a>
+				</Link>
 			</div>
 		</div>
 	);

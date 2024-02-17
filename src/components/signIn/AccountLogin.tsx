@@ -1,4 +1,5 @@
-import Form from "./Form";
+import { Link } from "react-router-dom";
+import LoginForm from "./LoginForm";
 
 const AccountLogin = () => {
 	return (
@@ -20,11 +21,14 @@ const AccountLogin = () => {
 					</a>{" "}
 					if you have questions.
 				</p>
-				<Form />
+				<LoginForm />
 				<div>
-					<a href="#" className="border-b uppercase font-semibold">
+					<Link
+						to="/sign-up"
+						className="border-b uppercase font-semibold"
+					>
 						Create Account
-					</a>
+					</Link>
 				</div>
 			</div>
 		</div>

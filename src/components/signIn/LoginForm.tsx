@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import PrimaryBtn from "../ui/PrimaryBtn";
+import PrimaryBtn from "@/components/ui/PrimaryBtn";
 
-const Form = () => {
+const LoginForm = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState<{ email: string; password: string }>({
@@ -87,4 +87,4 @@ const Form = () => {
 	);
 };
 
-export default Form;
+export default LoginForm;
