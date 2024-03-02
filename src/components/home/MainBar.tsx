@@ -7,6 +7,7 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import SupportMenu from "@/components/home/SupportMenu";
 import { Link } from "react-router-dom";
@@ -30,7 +31,13 @@ const MainBar = () => {
 	return (
 		<div className="w-full py-1 flex items-center" id="#">
 			<div className="max-w-lg ml-[42rem]">
-				<Carousel>
+				<Carousel
+					plugins={[
+						Autoplay({
+							delay: 5000,
+						}),
+					]}
+				>
 					<CarouselContent>
 						{items.map((item) => (
 							<CarouselItem key={item.id} className="text-center">

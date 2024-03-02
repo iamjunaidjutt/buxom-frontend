@@ -8,6 +8,7 @@ import ShippingAndReturn from "@/pages/ShippingAndReturn";
 import FAQs from "@/pages/FAQs";
 import StoreLocator from "@/pages/StoreLocator";
 import SignUp from "@/pages/SignUp";
+import Products from "@/pages/Products";
 
 const router = createBrowserRouter([
 	{ path: "/", element: <Home /> },
@@ -18,8 +19,13 @@ const router = createBrowserRouter([
 	{ path: "/faqs", element: <FAQs /> },
 	{ path: "/store-locator", element: <StoreLocator /> },
 	{ path: "/sign-up", element: <SignUp /> },
+	{ path: "/products", element: <Products /> },
 ]);
 
 export default function App() {
-	return <RouterProvider router={router} />;
+	return (
+		<>
+			<RouterProvider router={router} />
+		</>
+	);
 }
