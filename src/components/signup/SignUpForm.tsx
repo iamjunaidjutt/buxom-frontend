@@ -1,59 +1,78 @@
 import React, { useState } from "react";
 import PrimaryBtn from "@/components/ui/PrimaryBtn";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const LoginForm = () => {
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [newLetter, setNewLetter] = useState(false);
-	const [month, setMonth] = useState("");
-	const [day, setDay] = useState("");
-	const [phone, setPhone] = useState("");
-	const [email, setEmail] = useState("");
-	const [smsUpdates, setSmsUpdates] = useState(false);
-	const [password, setPassword] = useState("");
-	const [showPassword, setShowPassword] = useState(false);
+	const navigate = useNavigate();
+
+	const [fields, setFields] = useState<{
+		firstname: string;
+		lastname: string;
+		newsLetter: boolean;
+		month: string;
+		day: string;
+		phone: string;
+		email: string;
+		smsUpdates: boolean;
+		password: string;
+		showPassword: boolean;
+	}>({
+		firstname: "",
+		lastname: "",
+		newsLetter: false,
+		month: "",
+		day: "",
+		phone: "",
+		email: "",
+		smsUpdates: false,
+		password: "",
+		showPassword: false,
+	});
 	const [error, setError] = useState<{
-		firstName: string;
-		lastName: string;
+		firstname: string;
+		lastname: string;
 		email: string;
 		password: string;
+		smsUpdates: string;
 	}>({
-		firstName: "",
-		lastName: "",
+		firstname: "",
+		lastname: "",
 		email: "",
 		password: "",
+		smsUpdates: "",
 	});
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		// First Name Validation
-		if (firstName.trim() === "") {
+		if (fields.firstname.trim() === "") {
 			setError((prevError) => ({
 				...prevError,
-				firstName: "First Name is required",
+				firstname: "First Name is required",
 			}));
 		} else {
-			setError((prevError) => ({ ...prevError, firstName: "" }));
+			setError((prevError) => ({ ...prevError, firstname: "" }));
 		}
 
 		// Last Name Validation
-		if (lastName.trim() === "") {
+		if (fields.lastname.trim() === "") {
 			setError((prevError) => ({
 				...prevError,
-				lastName: "Last Name is required",
+				lastname: "Last Name is required",
 			}));
 		} else {
-			setError((prevError) => ({ ...prevError, lastName: "" }));
+			setError((prevError) => ({ ...prevError, lastname: "" }));
 		}
 
 		// Email Validation
-		if (email.trim() === "") {
+		if (fields.email.trim() === "") {
 			setError((prevError) => ({
 				...prevError,
 				email: "Email is required",
 			}));
-		} else if (!email.includes("@")) {
+		} else if (!fields.email.includes("@")) {
 			setError((prevError) => ({
 				...prevError,
 				email: "Email is invalid",
@@ -63,18 +82,79 @@ const LoginForm = () => {
 		}
 
 		// Password Validation
-		if (password.trim() === "") {
+		if (fields.password.trim() === "") {
 			setError((prevError) => ({
 				...prevError,
 				password: "Password is required",
 			}));
-		} else if (password.length < 8) {
+		} else if (fields.password.length < 6) {
 			setError((prevError) => ({
 				...prevError,
-				password: "Password must be at least 8 characters",
+				password: "Password must be at least 6 characters",
 			}));
 		} else {
 			setError((prevError) => ({ ...prevError, password: "" }));
+		}
+
+		// SMS Updates Validation
+		if (
+			fields.smsUpdates &&
+			fields.phone.trim() === "" &&
+			fields.phone.length < 10
+		) {
+			setError((prevError) => ({
+				...prevError,
+				smsUpdates: "Phone is required",
+			}));
+		} else {
+			setError((prevError) => ({ ...prevError, smsUpdates: "" }));
+		}
+
+		// If there is no error
+		if (
+			!error.firstname &&
+			!error.lastname &&
+			!error.email &&
+			!error.password &&
+			!error.smsUpdates
+		) {
+			const newFields = {
+				...fields,
+				role: "USER",
+			};
+
+			console.log(newFields);
+
+			// Send the data to the server
+			const response = await fetch("http://localhost:8080/users/create", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(newFields),
+			});
+
+			if (!response.ok) {
+				toast.error("Something went wrong, please try again later");
+				return;
+			}
+
+			// Redirect to the home page
+			navigate("/sign-in");
+
+			// Clear the fields
+			setFields({
+				firstname: "",
+				lastname: "",
+				newsLetter: false,
+				month: "",
+				day: "",
+				phone: "",
+				email: "",
+				smsUpdates: false,
+				password: "",
+				showPassword: false,
+			});
 		}
 	};
 
@@ -82,35 +162,39 @@ const LoginForm = () => {
 		<form onSubmit={handleSubmit} className="space-y-7 text-left">
 			{/* FistName */}
 			<div className="flex flex-col w-full">
-				<label htmlFor="firstName">
+				<label htmlFor="firstname">
 					First Name <span className=" text-red-600">*</span>
 				</label>
-				{error.firstName && (
-					<p className="text-red-600 text-xs">{error.firstName}</p>
+				{error.firstname && (
+					<p className="text-red-600 text-xs">{error.firstname}</p>
 				)}
 				<input
 					type="text"
-					id="firstName"
-					name="firstName"
-					value={firstName}
-					onChange={(e) => setFirstName(e.target.value)}
+					id="firstname"
+					name="firstname"
+					value={fields.firstname}
+					onChange={(e) =>
+						setFields({ ...fields, firstname: e.target.value })
+					}
 					className="border-b border-gray-200 bg-transparent focus:outline-none focus:border-b-2 focus:border-white focus:py-1"
 				/>
 			</div>
-			{/* LastName */}
+			{/* lastname */}
 			<div className="flex flex-col w-full">
-				<label htmlFor="lastName">
+				<label htmlFor="lastname">
 					Last Name <span className=" text-red-600">*</span>
 				</label>
-				{error.lastName && (
-					<p className="text-red-600 text-xs">{error.lastName}</p>
+				{error.lastname && (
+					<p className="text-red-600 text-xs">{error.lastname}</p>
 				)}
 				<input
 					type="text"
-					id="lastName"
-					name="lastName"
-					value={lastName}
-					onChange={(e) => setLastName(e.target.value)}
+					id="lastname"
+					name="lastname"
+					value={fields.lastname}
+					onChange={(e) =>
+						setFields({ ...fields, lastname: e.target.value })
+					}
 					className="border-b border-gray-200 bg-transparent focus:outline-none focus:border-b-2 focus:border-white focus:py-1"
 				/>
 			</div>
@@ -126,8 +210,10 @@ const LoginForm = () => {
 					type="text"
 					id="email"
 					name="email"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
+					value={fields.email}
+					onChange={(e) =>
+						setFields({ ...fields, email: e.target.value })
+					}
 					className="border-b border-gray-200 bg-transparent focus:outline-none focus:border-b-2 focus:border-white focus:py-1"
 				/>
 			</div>
@@ -138,8 +224,13 @@ const LoginForm = () => {
 						type="checkbox"
 						id="newsletter"
 						name="newsletter"
-						checked={newLetter}
-						onChange={(e) => setNewLetter(e.target.checked)}
+						checked={fields.newsLetter}
+						onChange={(e) =>
+							setFields({
+								...fields,
+								newsLetter: e.target.checked,
+							})
+						}
 						className="h-5 w-5 rounded-sm bg-black focus:outline-none"
 					/>
 					<label htmlFor="newsletter" className="font-bold">
@@ -163,8 +254,10 @@ const LoginForm = () => {
 					<select
 						id="month"
 						name="month"
-						value={month}
-						onChange={(e) => setMonth(e.target.value)}
+						value={fields.month}
+						onChange={(e) =>
+							setFields({ ...fields, month: e.target.value })
+						}
 						className="border-b border-gray-200 bg-black text-white focus:outline-none focus:border-b-2 focus:border-white focus:py-1"
 					>
 						<option value=""></option>
@@ -188,8 +281,10 @@ const LoginForm = () => {
 					<select
 						id="day"
 						name="day"
-						value={day}
-						onChange={(e) => setDay(e.target.value)}
+						value={fields.day}
+						onChange={(e) =>
+							setFields({ ...fields, day: e.target.value })
+						}
 						className="border-b border-gray-200 bg-black text-white focus:outline-none focus:border-b-2 focus:border-white focus:py-1"
 					>
 						<option value=""></option>
@@ -203,13 +298,23 @@ const LoginForm = () => {
 			</div>
 			{/* Phone */}
 			<div className="flex flex-col w-full">
-				<label htmlFor="phone">Phone</label>
+				<label htmlFor="phone">
+					Phone{" "}
+					{fields.smsUpdates && (
+						<span className=" text-red-600">*</span>
+					)}
+				</label>
+				{error.smsUpdates && fields.smsUpdates && (
+					<p className="text-red-600 text-xs">{error.smsUpdates}</p>
+				)}
 				<input
 					type="text"
 					id="phone"
 					name="phone"
-					value={phone}
-					onChange={(e) => setPhone(e.target.value)}
+					value={fields.phone}
+					onChange={(e) =>
+						setFields({ ...fields, phone: e.target.value })
+					}
 					className="border-b border-gray-200 bg-transparent focus:outline-none focus:border-b-2 focus:border-white focus:py-1"
 				/>
 				<p className="text-sm text-gray-300 leading-1">
@@ -224,8 +329,13 @@ const LoginForm = () => {
 						type="checkbox"
 						id="smsUpdates"
 						name="smsUpdates"
-						checked={smsUpdates}
-						onChange={(e) => setSmsUpdates(e.target.checked)}
+						checked={fields.smsUpdates}
+						onChange={(e) =>
+							setFields({
+								...fields,
+								smsUpdates: e.target.checked,
+							})
+						}
 						className="h-5 w-5 rounded-sm bg-black focus:outline-none"
 					/>
 					<label htmlFor="smsUpdates" className="font-bold">
@@ -253,11 +363,13 @@ const LoginForm = () => {
 					)}
 				</div>
 				<input
-					type={showPassword ? "text" : "password"}
+					type={fields.showPassword ? "text" : "password"}
 					id="password"
 					name="password"
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
+					value={fields.password}
+					onChange={(e) =>
+						setFields({ ...fields, password: e.target.value })
+					}
 					className="border-b border-gray-200 bg-transparent focus:outline-none focus:border-b-2 focus:border-white focus:py-1"
 				/>
 				<div className="flex items-center gap-3">
@@ -265,8 +377,13 @@ const LoginForm = () => {
 						type="checkbox"
 						id="showPassword"
 						name="showPassword"
-						checked={showPassword}
-						onChange={(e) => setShowPassword(e.target.checked)}
+						checked={fields.showPassword}
+						onChange={(e) =>
+							setFields({
+								...fields,
+								showPassword: e.target.checked,
+							})
+						}
 						className="h-5 w-5 rounded-sm bg-black focus:outline-none"
 					/>
 					<label htmlFor="showPassword" className="font-bold">

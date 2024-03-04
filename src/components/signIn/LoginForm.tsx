@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import PrimaryBtn from "@/components/ui/PrimaryBtn";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState<{ email: string; password: string }>({
@@ -9,7 +12,7 @@ const LoginForm = () => {
 		password: "",
 	});
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		// Email Validation
@@ -33,7 +36,7 @@ const LoginForm = () => {
 				...prevError,
 				password: "Password is required",
 			}));
-		} else if (password.length < 8) {
+		} else if (password.length < 6) {
 			setError((prevError) => ({
 				...prevError,
 				password: "Password must be at least 8 characters",
@@ -41,6 +44,28 @@ const LoginForm = () => {
 		} else {
 			setError((prevError) => ({ ...prevError, password: "" }));
 		}
+
+		// If there are no errors, submit the form
+		if (!error.email && !error.password) {
+			const response = await fetch("http://localhost:8080/users/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email, password, role: "USER" }),
+			});
+
+			if (!response.ok) {
+				toast.error("Something went wrong, please try again");
+				return;
+			}
+
+			navigate("/");
+		}
+
+		// Reset the form
+		setEmail("");
+		setPassword("");
 	};
 
 	return (
