@@ -53,11 +53,20 @@ const AdminSignIn = () => {
 
 			// If there's an error, then throw an error
 			if (!response.ok) {
-				if (response.status === 401) {
-					toast.error("Invalid email or password");
+				if (response.status === 400) {
+					toast.error("Invalid credentials. Enter correct password!");
+					return;
+				} else if (response.status === 401) {
+					toast.error("Invalid credentials. Unauthorized!");
+					return;
+				} else if (response.status === 404) {
+					toast.error("User not found!");
 					return;
 				} else {
-					throw new Error("An error occurred. Please try again.");
+					toast.error(
+						"Something went wrong. Please try again later!"
+					);
+					return;
 				}
 			}
 

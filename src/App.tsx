@@ -18,6 +18,12 @@ import AdminRootLayout from "@/components/admin/AdminRootLayout";
 import AdminSignUp from "@/components/admin/AdminSignUp";
 import AdminSignIn from "@/components/admin/AdminSignIn";
 import Dashboard from "@/components/admin/Dashboard";
+import AllCategories from "@/components/admin/Categories";
+import AllProducts from "@/components/admin/Products";
+import AllOrders from "@/components/admin/Orders";
+import AllUsers from "@/components/admin/Users";
+import Settings from "@/components/admin/Settings";
+import CreateCategory from "./components/admin/categories/CreateCategory";
 
 const router = createBrowserRouter([
 	{
@@ -44,6 +50,18 @@ const router = createBrowserRouter([
 			{ path: "sign-in", element: <AdminSignIn /> },
 			{ path: "sign-up", element: <AdminSignUp /> },
 			{ path: "dashboard", element: <Dashboard /> },
+			{
+				path: "categories",
+				children: [
+					{ index: true, element: <AllCategories /> },
+					{ path: "create", element: <CreateCategory /> },
+					// { path: "edit/:id", element: <EditCategory /> },
+				],
+			},
+			{ path: "products", element: <AllProducts /> },
+			{ path: "orders", element: <AllOrders /> },
+			{ path: "users", element: <AllUsers /> },
+			{ path: "settings", element: <Settings /> },
 		],
 	},
 ]);
