@@ -13,33 +13,38 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
-	name: z
-		.string()
-		.min(2, {
-			message: "Name should be at least 2 characters",
-		})
-		.max(50),
-	description: z
-		.string()
-		.min(7, {
-			message: "Description should be at least 7 characters",
-		})
-		.max(1000),
-	file: z.string().optional(),
+	file: z.string(),
 });
 
-const CreateCategory = () => {
+const CreateImage = () => {
 	const [uFile, setUFile] = useState<File | undefined>();
+	const params = useParams();
+	const id = params.id;
+
+	useEffect(() => {
+		const fetchImage = async () => {
+			try {
+				const response = await fetch(
+					"http://localhost:8080/images/" + id
+				);
+				const data = await response.json();
+				setUFile(data.imageURLs);
+			} catch (error) {
+				console.error(error);
+				toast.error("Failed to fetch image");
+			}
+		};
+		fetchImage();
+	}, [id]);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			name: "",
-			description: "",
 			file: "",
 		},
 	});
@@ -66,16 +71,14 @@ const CreateCategory = () => {
 	};
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
-		console.log(data);
-
 		// first upload the image to the server
 		const result = await uploadImage();
 		data.file = result.path;
 		// then create the category
 		const response = await fetch(
-			"http://localhost:8080/categories/create",
+			"http://localhost:8080/images/update" + id,
 			{
-				method: "POST",
+				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -90,9 +93,7 @@ const CreateCategory = () => {
 
 	return (
 		<div className="p-5 flex flex-col gap-4 items-start w-full">
-			<h1 className="text-4xl font-nunitoSans font-bold">
-				Create Category
-			</h1>
+			<h1 className="text-4xl font-nunitoSans font-bold">Edit Image</h1>
 			<div className="w-5/12">
 				<Form {...form}>
 					<form
@@ -100,46 +101,6 @@ const CreateCategory = () => {
 						className="space-y-4"
 						encType="multipart/form-data"
 					>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Name</FormLabel>
-									<FormControl>
-										<Input
-											placeholder="Name"
-											{...field}
-											className="text-black"
-										/>
-									</FormControl>
-									<FormDescription>
-										This is your public display name.
-									</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Description</FormLabel>
-									<FormControl>
-										<Textarea
-											placeholder="Description"
-											{...field}
-											className="text-black"
-										/>
-									</FormControl>
-									<FormDescription>
-										This is your public display description.
-									</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 						<FormField
 							control={form.control}
 							name="file"
@@ -155,23 +116,23 @@ const CreateCategory = () => {
 										/>
 									</FormControl>
 									<FormDescription>
-										Upload the image for the category.
+										Upload the image.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-						<img
+						{/* <img
 							src={uFile ? URL.createObjectURL(uFile) : ""}
 							alt=""
 							className="w-auto h-28 object-cover"
-						/>
+						/> */}
 						<Button
 							type="submit"
 							variant={"outline"}
 							className="text-black"
 						>
-							Create Category
+							Edit Image
 						</Button>
 					</form>
 				</Form>
@@ -180,4 +141,4 @@ const CreateCategory = () => {
 	);
 };
 
-export default CreateCategory;
+export default CreateImage;

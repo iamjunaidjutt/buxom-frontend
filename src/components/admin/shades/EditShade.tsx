@@ -13,8 +13,11 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { ShadesProps } from "@/lib/types";
 
 const formSchema = z.object({
 	name: z
@@ -29,53 +32,55 @@ const formSchema = z.object({
 			message: "Description should be at least 7 characters",
 		})
 		.max(1000),
-	file: z.string().optional(),
+	code: z
+		.string()
+		.min(6, { message: "Code should be at least 6 characters" }),
 });
 
-const CreateCategory = () => {
-	const [uFile, setUFile] = useState<File | undefined>();
+const EditShade = () => {
+	const [shade, setShade] = useState<ShadesProps>({
+		id: "",
+		name: "",
+		description: "",
+		code: "",
+	});
+	const params = useParams();
+	const id = params.id;
+
+	useEffect(() => {
+		const fetchShade = async () => {
+			try {
+				const response = await fetch(
+					"http://localhost:8080/shades/" + id
+				);
+				const data = await response.json();
+				setShade(data);
+			} catch (error) {
+				console.error(error);
+				toast.error("Failed to fetch shade");
+			}
+		};
+
+		fetchShade();
+	}, [id]);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			name: "",
-			description: "",
-			file: "",
+			name: shade.name,
+			description: shade.description,
+			code: shade.code,
 		},
 	});
-
-	const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (file) {
-			setUFile(file);
-		}
-	};
-
-	const uploadImage = async () => {
-		// upload to server using multer
-		const formData = new FormData();
-		formData.append("file", uFile);
-		console.log(uFile);
-		const response = await fetch("http://localhost:8080/upload", {
-			method: "POST",
-			body: formData,
-		});
-		console.log("data response: " + response);
-		const data = await response.json();
-		return data;
-	};
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		console.log(data);
 
-		// first upload the image to the server
-		const result = await uploadImage();
-		data.file = result.path;
 		// then create the category
 		const response = await fetch(
-			"http://localhost:8080/categories/create",
+			"http://localhost:8080/shades/update/" + id,
 			{
-				method: "POST",
+				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -90,9 +95,7 @@ const CreateCategory = () => {
 
 	return (
 		<div className="p-5 flex flex-col gap-4 items-start w-full">
-			<h1 className="text-4xl font-nunitoSans font-bold">
-				Create Category
-			</h1>
+			<h1 className="text-4xl font-nunitoSans font-bold">Edit Shade</h1>
 			<div className="w-5/12">
 				<Form {...form}>
 					<form
@@ -111,6 +114,13 @@ const CreateCategory = () => {
 											placeholder="Name"
 											{...field}
 											className="text-black"
+											value={shade.name}
+											onChange={(e) => {
+												setShade({
+													...shade,
+													name: e.target.value,
+												});
+											}}
 										/>
 									</FormControl>
 									<FormDescription>
@@ -131,6 +141,13 @@ const CreateCategory = () => {
 											placeholder="Description"
 											{...field}
 											className="text-black"
+											value={shade.description}
+											onChange={(e) => {
+												setShade({
+													...shade,
+													description: e.target.value,
+												});
+											}}
 										/>
 									</FormControl>
 									<FormDescription>
@@ -142,36 +159,43 @@ const CreateCategory = () => {
 						/>
 						<FormField
 							control={form.control}
-							name="file"
+							name="code"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Image</FormLabel>
+									<FormLabel>Code</FormLabel>
 									<FormControl>
 										<Input
-											type="file"
+											placeholder="Color Code"
 											{...field}
 											className="text-black"
-											onChange={fileChangeHandler}
+											value={shade.code}
+											onChange={(e) => {
+												setShade({
+													...shade,
+													code: e.target.value,
+												});
+											}}
 										/>
 									</FormControl>
 									<FormDescription>
-										Upload the image for the category.
+										This is your public display hex color
+										code.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-						<img
-							src={uFile ? URL.createObjectURL(uFile) : ""}
-							alt=""
-							className="w-auto h-28 object-cover"
-						/>
 						<Button
 							type="submit"
 							variant={"outline"}
 							className="text-black"
+							onClick={() => {
+								form.setValue("name", shade.name);
+								form.setValue("description", shade.description);
+								form.setValue("code", shade.code);
+							}}
 						>
-							Create Category
+							Edit Shade
 						</Button>
 					</form>
 				</Form>
@@ -180,4 +204,4 @@ const CreateCategory = () => {
 	);
 };
 
-export default CreateCategory;
+export default EditShade;

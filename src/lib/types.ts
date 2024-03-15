@@ -1,15 +1,4 @@
 
-export interface products {
-	id: number;
-	name: string;
-	description: string;
-	price: number;
-	imageUrl: string;
-	tags: string[];
-	badges: string[];
-	shades: { name: string; code: string; color: string }[];
-}
-
 export interface ModalProps {
 	show: boolean;
 	onClose: () => void;
@@ -17,7 +6,7 @@ export interface ModalProps {
 }
 
 export interface CategoriesProps {
-	id: number;
+	id: string;
 	name: string;
 	description: string;
 	imageUrl: string;
@@ -26,4 +15,72 @@ export interface CategoriesProps {
 export interface ProductsHeaderProps {
 	category: CategoriesProps;
 	titleLine?: string;
+}
+
+export interface BadgesProps {
+	id: string;
+	name: string;
+}
+
+export interface TagsProps {
+	id: string;
+	name: string;
+}
+
+export interface ImagesProps {
+	id: string;
+	imageURLs: string;
+}
+
+export interface ShadesProps {
+	id: string;
+	name: string;
+	description: string;
+	code: string;
+}
+
+export interface ProductsProps {
+	id: string;
+	name: string;
+	description: string;
+	price: number;
+	discount: number;
+	quantity: number;
+	categoryId: string;
+	images: ImagesProps[];
+	shades: ShadesProps[];
+	tags: TagsProps[];
+	badges: BadgesProps[];
+}
+
+export interface OrdersProps {
+	id: string;
+	userId: string;
+	total: number;
+}
+
+export interface OrderProductProps {
+	id: string;
+	quantity: number;
+	orderId: string;
+	productId: string;
+}
+
+export interface UsersProps {
+	id: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	phone: string;
+	address: string;
+	role: string;
+}
+
+export interface UserPreferenceProps {
+	id: string;
+	userId: string;
+	month: string;
+	day: number;
+	newsLetter: boolean;
+	smsUpdates: boolean;
 }

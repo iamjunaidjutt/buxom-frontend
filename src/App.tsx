@@ -18,12 +18,26 @@ import AdminRootLayout from "@/components/admin/AdminRootLayout";
 import AdminSignUp from "@/components/admin/AdminSignUp";
 import AdminSignIn from "@/components/admin/AdminSignIn";
 import Dashboard from "@/components/admin/Dashboard";
-import AllCategories from "@/components/admin/Categories";
-import AllProducts from "@/components/admin/Products";
+import AllCategories from "@/components/admin/categories/Categories";
+import CreateCategory from "@/components/admin/categories/CreateCategory";
+import EditCategory from "@/components/admin/categories/EditCategory";
+import AllProducts from "@/components/admin/products/Products";
+import CreateProduct from "@/components/admin/products/CreateProduct";
 import AllOrders from "@/components/admin/Orders";
 import AllUsers from "@/components/admin/Users";
 import Settings from "@/components/admin/Settings";
-import CreateCategory from "./components/admin/categories/CreateCategory";
+import AllShades from "@/components/admin/shades/Shades";
+import CreateShade from "@/components/admin/shades/CreateShade";
+import EditShade from "@/components/admin/shades/EditShade";
+import AllTags from "@/components/admin/tags/Tags";
+import CreateTag from "@/components/admin/tags/CreateTag";
+import EditTag from "@/components/admin/tags/EditTag";
+import AllBadges from "@/components/admin/badges/Badges";
+import CreateBadge from "@/components/admin/badges/CreateBadge";
+import EditBadge from "@/components/admin/badges/EditBadge";
+import AllImages from "@/components/admin/images/Images";
+import CreateImage from "@/components/admin/images/CreateImage";
+import EditImage from "@/components/admin/images/EditImage";
 
 const router = createBrowserRouter([
 	{
@@ -55,10 +69,48 @@ const router = createBrowserRouter([
 				children: [
 					{ index: true, element: <AllCategories /> },
 					{ path: "create", element: <CreateCategory /> },
-					// { path: "edit/:id", element: <EditCategory /> },
+					{ path: "update/:id", element: <EditCategory /> },
 				],
 			},
-			{ path: "products", element: <AllProducts /> },
+			{
+				path: "shades",
+				children: [
+					{ index: true, element: <AllShades /> },
+					{ path: "create", element: <CreateShade /> },
+					{ path: "update/:id", element: <EditShade /> },
+				],
+			},
+			{
+				path: "tags",
+				children: [
+					{ index: true, element: <AllTags /> },
+					{ path: "create", element: <CreateTag /> },
+					{ path: "update/:id", element: <EditTag /> },
+				],
+			},
+			{
+				path: "badges",
+				children: [
+					{ index: true, element: <AllBadges /> },
+					{ path: "create", element: <CreateBadge /> },
+					{ path: "update/:id", element: <EditBadge /> },
+				],
+			},
+			{
+				path: "images",
+				children: [
+					{ index: true, element: <AllImages /> },
+					{ path: "create", element: <CreateImage /> },
+					{ path: "update/:id", element: <EditImage /> },
+				],
+			},
+			{
+				path: "products",
+				children: [
+					{ index: true, element: <AllProducts /> },
+					{ path: "create", element: <CreateProduct /> },
+				],
+			},
 			{ path: "orders", element: <AllOrders /> },
 			{ path: "users", element: <AllUsers /> },
 			{ path: "settings", element: <Settings /> },

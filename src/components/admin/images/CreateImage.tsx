@@ -14,32 +14,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
-	name: z
-		.string()
-		.min(2, {
-			message: "Name should be at least 2 characters",
-		})
-		.max(50),
-	description: z
-		.string()
-		.min(7, {
-			message: "Description should be at least 7 characters",
-		})
-		.max(1000),
-	file: z.string().optional(),
+	file: z.string(),
 });
 
-const CreateCategory = () => {
+const CreateImage = () => {
 	const [uFile, setUFile] = useState<File | undefined>();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			name: "",
-			description: "",
 			file: "",
 		},
 	});
@@ -71,17 +56,13 @@ const CreateCategory = () => {
 		// first upload the image to the server
 		const result = await uploadImage();
 		data.file = result.path;
-		// then create the category
-		const response = await fetch(
-			"http://localhost:8080/categories/create",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
+		const response = await fetch("http://localhost:8080/images/create", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
 
 		const responseData = await response.json();
 		console.log(responseData);
@@ -90,9 +71,7 @@ const CreateCategory = () => {
 
 	return (
 		<div className="p-5 flex flex-col gap-4 items-start w-full">
-			<h1 className="text-4xl font-nunitoSans font-bold">
-				Create Category
-			</h1>
+			<h1 className="text-4xl font-nunitoSans font-bold">Create Image</h1>
 			<div className="w-5/12">
 				<Form {...form}>
 					<form
@@ -100,46 +79,6 @@ const CreateCategory = () => {
 						className="space-y-4"
 						encType="multipart/form-data"
 					>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Name</FormLabel>
-									<FormControl>
-										<Input
-											placeholder="Name"
-											{...field}
-											className="text-black"
-										/>
-									</FormControl>
-									<FormDescription>
-										This is your public display name.
-									</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Description</FormLabel>
-									<FormControl>
-										<Textarea
-											placeholder="Description"
-											{...field}
-											className="text-black"
-										/>
-									</FormControl>
-									<FormDescription>
-										This is your public display description.
-									</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 						<FormField
 							control={form.control}
 							name="file"
@@ -155,7 +94,7 @@ const CreateCategory = () => {
 										/>
 									</FormControl>
 									<FormDescription>
-										Upload the image for the category.
+										Upload the image.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
@@ -171,7 +110,7 @@ const CreateCategory = () => {
 							variant={"outline"}
 							className="text-black"
 						>
-							Create Category
+							Create Image
 						</Button>
 					</form>
 				</Form>
@@ -180,4 +119,4 @@ const CreateCategory = () => {
 	);
 };
 
-export default CreateCategory;
+export default CreateImage;
