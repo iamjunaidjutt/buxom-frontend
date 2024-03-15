@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ShadesProps } from "@/lib/types";
@@ -38,6 +38,7 @@ const formSchema = z.object({
 });
 
 const EditShade = () => {
+	const navigate = useNavigate();
 	const [shade, setShade] = useState<ShadesProps>({
 		id: "",
 		name: "",
@@ -75,22 +76,28 @@ const EditShade = () => {
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		console.log(data);
+		try {
+			// then create the category
+			const response = await fetch(
+				"http://localhost:8080/shades/update/" + id,
+				{
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				}
+			);
 
-		// then create the category
-		const response = await fetch(
-			"http://localhost:8080/shades/update/" + id,
-			{
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
-
-		const responseData = await response.json();
-		console.log(responseData);
-		form.reset();
+			const responseData = await response.json();
+			console.log(responseData);
+			form.reset();
+			toast.success("Shade updated successfully");
+			navigate("/admin/shades");
+		} catch (error) {
+			console.error("Error updating shade:", error);
+			toast.error("Failed to update shade");
+		}
 	};
 
 	return (

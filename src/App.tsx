@@ -23,8 +23,9 @@ import CreateCategory from "@/components/admin/categories/CreateCategory";
 import EditCategory from "@/components/admin/categories/EditCategory";
 import AllProducts from "@/components/admin/products/Products";
 import CreateProduct from "@/components/admin/products/CreateProduct";
+import EditProduct from "@/components/admin/products/EditProduct";
 import AllOrders from "@/components/admin/Orders";
-import AllUsers from "@/components/admin/Users";
+import AllUsers from "@/components/admin/users/Users";
 import Settings from "@/components/admin/Settings";
 import AllShades from "@/components/admin/shades/Shades";
 import CreateShade from "@/components/admin/shades/CreateShade";
@@ -109,6 +110,7 @@ const router = createBrowserRouter([
 				children: [
 					{ index: true, element: <AllProducts /> },
 					{ path: "create", element: <CreateProduct /> },
+					{ path: "update/:id", element: <EditProduct /> },
 				],
 			},
 			{ path: "orders", element: <AllOrders /> },

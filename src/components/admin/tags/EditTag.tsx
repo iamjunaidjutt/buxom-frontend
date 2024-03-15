@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TagsProps } from "@/lib/types";
 import toast from "react-hot-toast";
 
@@ -28,6 +28,7 @@ const formSchema = z.object({
 });
 
 const EditTag = () => {
+	const navigate = useNavigate();
 	const [tag, setTag] = useState<TagsProps>({
 		id: "",
 		name: "",
@@ -59,22 +60,28 @@ const EditTag = () => {
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		console.log(data);
+		try {
+			// then create the category
+			const response = await fetch(
+				"http://localhost:8080/tags/update" + params.id,
+				{
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				}
+			);
 
-		// then create the category
-		const response = await fetch(
-			"http://localhost:8080/tags/update" + params.id,
-			{
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
-
-		const responseData = await response.json();
-		console.log(responseData);
-		form.reset();
+			const responseData = await response.json();
+			console.log(responseData);
+			form.reset();
+			toast.success("Tag updated successfully");
+			navigate("/admin/tags");
+		} catch (error) {
+			console.error(error);
+			toast.error("Failed to update tag");
+		}
 	};
 
 	return (

@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
 	name: z
@@ -34,6 +36,7 @@ const formSchema = z.object({
 
 const CreateCategory = () => {
 	const [uFile, setUFile] = useState<File | undefined>();
+	const navigate = useNavigate();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -67,25 +70,31 @@ const CreateCategory = () => {
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		console.log(data);
+		try {
+			// first upload the image to the server
+			const result = await uploadImage();
+			data.file = result.path;
+			// then create the category
+			const response = await fetch(
+				"http://localhost:8080/categories/create",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				}
+			);
 
-		// first upload the image to the server
-		const result = await uploadImage();
-		data.file = result.path;
-		// then create the category
-		const response = await fetch(
-			"http://localhost:8080/categories/create",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
-
-		const responseData = await response.json();
-		console.log(responseData);
-		form.reset();
+			const responseData = await response.json();
+			console.log(responseData);
+			form.reset();
+			toast.success("Category created successfully");
+			navigate("/admin/categories");
+		} catch (error) {
+			console.log(error);
+			toast.error("Error creating category");
+		}
 	};
 
 	return (

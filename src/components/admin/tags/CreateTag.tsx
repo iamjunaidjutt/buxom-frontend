@@ -13,6 +13,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
 	name: z
@@ -24,6 +26,7 @@ const formSchema = z.object({
 });
 
 const CreateTag = () => {
+	const navigate = useNavigate();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -33,19 +36,25 @@ const CreateTag = () => {
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		console.log(data);
+		try {
+			// then create the category
+			const response = await fetch("http://localhost:8080/tags/create", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
 
-		// then create the category
-		const response = await fetch("http://localhost:8080/tags/create", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		});
-
-		const responseData = await response.json();
-		console.log(responseData);
-		form.reset();
+			const responseData = await response.json();
+			console.log(responseData);
+			form.reset();
+			toast.success("Tag created successfully");
+			navigate("/admin/tags");
+		} catch (error) {
+			console.error(error);
+			toast.error("Failed to create tag");
+		}
 	};
 
 	return (

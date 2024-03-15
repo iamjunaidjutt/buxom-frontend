@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BadgesProps } from "@/lib/types";
 import toast from "react-hot-toast";
 
@@ -28,6 +28,7 @@ const formSchema = z.object({
 });
 
 const EditBadge = () => {
+	const naviagate = useNavigate();
 	const [badge, setBadge] = useState<BadgesProps>({
 		id: "",
 		name: "",
@@ -60,22 +61,28 @@ const EditBadge = () => {
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		console.log(data);
+		try {
+			// then create the category
+			const response = await fetch(
+				"http://localhost:8080/badges/update" + params.id,
+				{
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				}
+			);
 
-		// then create the category
-		const response = await fetch(
-			"http://localhost:8080/badges/update" + params.id,
-			{
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
-
-		const responseData = await response.json();
-		console.log(responseData);
-		form.reset();
+			const responseData = await response.json();
+			console.log(responseData);
+			form.reset();
+			toast.success("Badge updated successfully");
+			naviagate("/admin/badges");
+		} catch (error) {
+			console.error("Error updating badge:", error);
+			toast.error("Failed to update badge");
+		}
 	};
 
 	return (

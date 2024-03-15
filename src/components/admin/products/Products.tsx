@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,10 @@ const columns: ColumnDef<ProductsProps>[] = [
 	{
 		accessorKey: "price",
 		header: "Price",
+		cell: ({ row }) => {
+			const price: number = row.getValue("price");
+			return <span>${price}</span>;
+		},
 	},
 	{
 		accessorKey: "stock",
@@ -146,7 +150,7 @@ const columns: ColumnDef<ProductsProps>[] = [
 	{
 		accessorKey: "actions",
 		header: "Actions",
-		cell: () => {
+		cell: ({ row }) => {
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -158,8 +162,12 @@ const columns: ColumnDef<ProductsProps>[] = [
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>Delete Category</DropdownMenuItem>
-						<DropdownMenuItem>Edit Category</DropdownMenuItem>
+						<DropdownMenuItem>Delete Product</DropdownMenuItem>
+						<DropdownMenuItem>
+							<Link to={`update/${row.original.id}`}>
+								Edit Product
+							</Link>
+						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);

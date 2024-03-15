@@ -26,11 +26,13 @@ import {
 	BadgesProps,
 	CategoriesProps,
 	ImagesProps,
+	ProductsProps,
 	ShadesProps,
 	TagsProps,
 } from "@/lib/types";
 import toast from "react-hot-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useNavigate, useParams } from "react-router-dom";
 
 const formSchema = z.object({
 	name: z
@@ -69,6 +71,11 @@ const formSchema = z.object({
 });
 
 const EditProduct = () => {
+	const params = useParams();
+	const productId = params.id;
+	const navigate = useNavigate();
+
+	const [product, setProduct] = useState<ProductsProps>(null);
 	const [categories, setCategories] = useState<CategoriesProps[]>([]);
 	const [tags, setTags] = useState<TagsProps[]>([]);
 	const [badges, setBadges] = useState<BadgesProps[]>([]);
@@ -130,37 +137,72 @@ const EditProduct = () => {
 		}
 	};
 
+	const fetchProduct = async () => {
+		try {
+			const response = await fetch(
+				`http://localhost:8080/products/${productId}`
+			);
+			const data = await response.json();
+			console.log(data);
+			setProduct({
+				...data,
+				tags: data.Tags.map((tag: TagsProps) => tag.id),
+				badges: data.Badges.map((badge: BadgesProps) => badge.id),
+				shades: data.shades.map((shade: ShadesProps) => shade.id),
+				images: data.Image.map((image: ImagesProps) => image.id),
+			});
+		} catch (error) {
+			console.error(error);
+			toast.error("Failed to fetch product");
+		}
+	};
+
 	useEffect(() => {
 		fetchCategories();
 		fetchTags();
 		fetchBadges();
 		fetchShades();
 		fetchImages();
+		fetchProduct();
 	}, []);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			name: "",
-			category: "",
-			description: "",
-			price: 0,
-			stock: 0,
-			tags: [],
-			badges: [],
-			shades: [],
-			images: [],
+			name: product?.name,
+			category: product?.category.id,
+			description: product?.description,
+			price: product?.price,
+			stock: product?.stock,
+			tags: product?.tags.map((tag) => tag.id),
+			badges: product?.badges.map((badge) => badge.id),
+			shades: product?.shades.map((shade) => shade.id),
+			images: product?.images.map((image) => image.id),
 		},
 	});
+
+	useEffect(() => {
+		if (product) {
+			form.setValue("name", product.name);
+			form.setValue("category", product.category.id);
+			form.setValue("description", product.description);
+			form.setValue("price", product.price);
+			form.setValue("stock", product.stock);
+			form.setValue("tags", product.tags);
+			form.setValue("badges", product.badges);
+			form.setValue("shades", product.shades);
+			form.setValue("images", product.images);
+		}
+	}, [form, product]);
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		console.log(data);
 		// then create the category
 		try {
 			const response = await fetch(
-				"http://localhost:8080/products/create",
+				"http://localhost:8080/products/update/" + productId,
 				{
-					method: "POST",
+					method: "PUT",
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -170,21 +212,20 @@ const EditProduct = () => {
 			if (response.ok) {
 				const responseData = await response.json();
 				console.log(responseData);
-				toast.success("Product created successfully");
+				toast.success("Product updated successfully");
 				form.reset();
+				navigate("/admin/products");
 			}
 		} catch (error) {
 			console.error(error);
-			toast.error("Failed to create product");
+			toast.error("Failed to update product");
 			return;
 		}
 	};
 
 	return (
 		<div className="p-5 flex flex-col gap-4 items-start w-full">
-			<h1 className="text-4xl font-nunitoSans font-bold">
-				Create Product
-			</h1>
+			<h1 className="text-4xl font-nunitoSans font-bold">Edit Product</h1>
 			<div className="w-5/12">
 				<Form {...form}>
 					<form
@@ -203,6 +244,13 @@ const EditProduct = () => {
 											placeholder="Name"
 											{...field}
 											className="text-black"
+											value={product?.name}
+											onChange={(e) =>
+												setProduct({
+													...product,
+													name: e.target.value,
+												})
+											}
 										/>
 									</FormControl>
 									<FormDescription>
@@ -220,7 +268,12 @@ const EditProduct = () => {
 									<FormLabel>Category</FormLabel>
 									<FormControl>
 										<Select
-											onValueChange={field.onChange}
+											onValueChange={(value) => {
+												form.setValue(
+													"category",
+													value
+												);
+											}}
 											defaultValue={field.value}
 										>
 											<SelectTrigger
@@ -259,6 +312,13 @@ const EditProduct = () => {
 											placeholder="Description"
 											{...field}
 											className="text-black"
+											value={product?.description}
+											onChange={(e) =>
+												setProduct({
+													...product,
+													description: e.target.value,
+												})
+											}
 										/>
 									</FormControl>
 									<FormDescription>
@@ -280,6 +340,15 @@ const EditProduct = () => {
 											{...field}
 											type="number"
 											className="text-black"
+											value={product?.price}
+											onChange={(e) =>
+												setProduct({
+													...product,
+													price: Number(
+														e.target.value
+													),
+												})
+											}
 										/>
 									</FormControl>
 									<FormDescription>
@@ -301,6 +370,15 @@ const EditProduct = () => {
 											{...field}
 											type="number"
 											className="text-black"
+											value={product?.stock}
+											onChange={(e) =>
+												setProduct({
+													...product,
+													stock: Number(
+														e.target.value
+													),
+												})
+											}
 										/>
 									</FormControl>
 									<FormDescription>

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const formSchema = z.object({
@@ -25,6 +25,7 @@ const CreateImage = () => {
 	const [uFile, setUFile] = useState<File | undefined>();
 	const params = useParams();
 	const id = params.id;
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchImage = async () => {
@@ -71,24 +72,31 @@ const CreateImage = () => {
 	};
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
-		// first upload the image to the server
-		const result = await uploadImage();
-		data.file = result.path;
-		// then create the category
-		const response = await fetch(
-			"http://localhost:8080/images/update" + id,
-			{
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
+		try {
+			// first upload the image to the server
+			const result = await uploadImage();
+			data.file = result.path;
+			// then create the category
+			const response = await fetch(
+				"http://localhost:8080/images/update" + id,
+				{
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				}
+			);
 
-		const responseData = await response.json();
-		console.log(responseData);
-		form.reset();
+			const responseData = await response.json();
+			console.log(responseData);
+			form.reset();
+			toast.success("Image updated successfully");
+			navigate("/admin/images");
+		} catch (error) {
+			console.log(error);
+			toast.error("Error updating image");
+		}
 	};
 
 	return (

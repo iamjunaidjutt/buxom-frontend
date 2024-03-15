@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CategoriesProps } from "@/lib/types";
 import toast from "react-hot-toast";
 
@@ -37,6 +37,7 @@ const formSchema = z.object({
 
 const EditCategory = () => {
 	const [uFile, setUFile] = useState<File | undefined>();
+	const navigate = useNavigate();
 	const [category, setCategory] = useState<CategoriesProps>({
 		id: "",
 		name: "",
@@ -137,9 +138,11 @@ const EditCategory = () => {
 			const responseData = await response.json();
 			console.log(responseData);
 			form.reset();
+			toast.success("Category updated successfully");
+			navigate("/admin/categories");
 		} catch (error) {
 			console.error("Error editing category:", error);
-			toast.error("Failed to edit category");
+			toast.error("Failed to update category");
 		}
 	};
 

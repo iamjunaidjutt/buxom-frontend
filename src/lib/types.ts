@@ -45,8 +45,8 @@ export interface ProductsProps {
 	description: string;
 	price: number;
 	discount: number;
-	quantity: number;
-	categoryId: string;
+	stock: number;
+	category: CategoriesProps;
 	images: ImagesProps[];
 	shades: ShadesProps[];
 	tags: TagsProps[];
@@ -74,6 +74,7 @@ export interface UsersProps {
 	phone: string;
 	address: string;
 	role: string;
+	userPreference?: UserPreferenceProps;
 }
 
 export interface UserPreferenceProps {
