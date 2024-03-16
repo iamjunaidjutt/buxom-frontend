@@ -71,10 +71,11 @@ export interface UsersProps {
 	firstName: string;
 	lastName: string;
 	email: string;
+	password?: string;
 	phone: string;
 	address: string;
 	role: string;
-	userPreference?: UserPreferenceProps;
+	UserPreference?: UserPreferenceProps;
 }
 
 export interface UserPreferenceProps {

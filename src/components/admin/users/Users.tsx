@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import toast from "react-hot-toast";
-import { set } from "zod";
 
 const columns: ColumnDef<UsersProps>[] = [
 	{
@@ -39,11 +38,11 @@ const columns: ColumnDef<UsersProps>[] = [
 		},
 	},
 	{
-		accessorKey: "firstName",
+		accessorKey: "first_name",
 		header: "First Name",
 	},
 	{
-		accessorKey: "lastName",
+		accessorKey: "last_name",
 		header: "Last Name",
 	},
 	{
@@ -59,7 +58,7 @@ const columns: ColumnDef<UsersProps>[] = [
 		header: "Role",
 	},
 	{
-		accessorKey: "userPreference",
+		accessorKey: "UserPreference",
 		header: "User Preferences",
 		cell: ({ row }) => {
 			return (
@@ -84,22 +83,22 @@ const columns: ColumnDef<UsersProps>[] = [
 						<tbody>
 							<tr>
 								<td className="border border-gray-300 p-2">
-									{row.original.userPreference?.month
-										? row.original.userPreference.month
+									{row.original.UserPreference?.month
+										? row.original.UserPreference.month
 										: "Not Set"}
 								</td>
 								<td className="border border-gray-300 p-2">
-									{row.original.userPreference?.day
-										? row.original.userPreference.day
+									{row.original.UserPreference?.day
+										? row.original.UserPreference.day
 										: "Not Set"}
 								</td>
 								<td className="border border-gray-300 p-2">
-									{row.original.userPreference?.newsLetter
+									{row.original.UserPreference?.newsLetter
 										? "Yes"
 										: "No"}
 								</td>
 								<td className="border border-gray-300 p-2">
-									{row.original.userPreference?.smsUpdates
+									{row.original.UserPreference?.smsUpdates
 										? "Yes"
 										: "No"}
 								</td>
@@ -151,13 +150,8 @@ const Users = () => {
 			// fetch users
 			const response = await fetch("http://localhost:8080/users");
 			const data = await response.json();
-			setUsers({
-				...data,
-				firstName: data.first_name,
-				lastName: data.last_name,
-			});
-			console.log(data);
 			setUsers(data);
+			console.log(data);
 			toast.success("Users fetched successfully");
 		} catch (error) {
 			console.error(error);

@@ -25,7 +25,6 @@ import AllProducts from "@/components/admin/products/Products";
 import CreateProduct from "@/components/admin/products/CreateProduct";
 import EditProduct from "@/components/admin/products/EditProduct";
 import AllOrders from "@/components/admin/Orders";
-import AllUsers from "@/components/admin/users/Users";
 import Settings from "@/components/admin/Settings";
 import AllShades from "@/components/admin/shades/Shades";
 import CreateShade from "@/components/admin/shades/CreateShade";
@@ -39,6 +38,9 @@ import EditBadge from "@/components/admin/badges/EditBadge";
 import AllImages from "@/components/admin/images/Images";
 import CreateImage from "@/components/admin/images/CreateImage";
 import EditImage from "@/components/admin/images/EditImage";
+import AllUsers from "@/components/admin/users/Users";
+import CreateUser from "@/components/admin/users/CreateUser";
+import EditUser from "@/components/admin/users/EditUser";
 
 const router = createBrowserRouter([
 	{
@@ -113,8 +115,15 @@ const router = createBrowserRouter([
 					{ path: "update/:id", element: <EditProduct /> },
 				],
 			},
+			{
+				path: "users",
+				children: [
+					{ index: true, element: <AllUsers /> },
+					{ path: "create", element: <CreateUser /> },
+					{ path: "update/:id", element: <EditUser /> },
+				],
+			},
 			{ path: "orders", element: <AllOrders /> },
-			{ path: "users", element: <AllUsers /> },
 			{ path: "settings", element: <Settings /> },
 		],
 	},
