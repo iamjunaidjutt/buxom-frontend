@@ -3,6 +3,7 @@ import { IoClose } from "react-icons/io5";
 
 import { CategoriesProps, ModalProps } from "@/lib/types";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface props extends ModalProps {}
 
@@ -11,7 +12,8 @@ const ShopMakeupMenu: React.FC<props> = ({ show, onClose }) => {
 	const fetchCategories = async () => {
 		const res = await fetch("http://localhost:8080/categories");
 		const data = await res.json();
-		setCategories(data.categories);
+		setCategories(data);
+		console.log(data);
 	};
 
 	useEffect(() => {
@@ -23,23 +25,23 @@ const ShopMakeupMenu: React.FC<props> = ({ show, onClose }) => {
 		<>
 			<div className="bg-black/60 fixed inset-0 z-50 top-32 w-screen h-screen" />
 			<div className="fixed inset-0 z-50 top-32 transition-all duration-900 delay-900 ease-in-out">
-				<nav className="w-[30%] bg-black h-screen border-r border-white">
-					<div className="flex flex-col justify-center items-center h-full overflow-scroll">
+				<nav className="w-[30%] bg-black h-full border-r border-white">
+					<div className="flex flex-col py-10 items-center h-full overflow-y-scroll no-scrollbar scroll-smooth">
 						{categories.map((category) => (
-							<a
-								href="#"
+							<Link
 								key={category.id}
-								className="text-white font-bold relative text-2xl my-4 w-10/12 h-28 hover:border-2 border-red-600 rounded-xl "
+								to={`/products/category/${category.id}`}
+								className={`text-white font-bold relative text-2xl my-3 w-10/12 h-28 hover:border-2 border-red-600 rounded-xl`}
 							>
 								<img
-									src={category.imageUrl}
-									alt="image"
+									src={`http://localhost:8080${category.imageURL}`}
+									alt={category.name}
 									className="w-full h-full mx-auto border object-cover rounded-xl	"
 								/>
-								<span className="absolute text-black text-xl pl-5 top-10">
+								<span className="absolute text-white text-xl pl-5 top-10">
 									{category.name}
 								</span>
-							</a>
+							</Link>
 						))}
 					</div>
 				</nav>

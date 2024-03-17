@@ -26,6 +26,7 @@ const formSchema = z.object({
 			message: "Name should be at least 2 characters",
 		})
 		.max(50),
+	titleLine: z.string().optional(),
 	description: z
 		.string()
 		.min(7, {
@@ -41,8 +42,9 @@ const EditCategory = () => {
 	const [category, setCategory] = useState<CategoriesProps>({
 		id: "",
 		name: "",
+		titleLine: "",
 		description: "",
-		imageUrl: "",
+		imageURL: "",
 	});
 	const { id } = useParams<{ id: string }>();
 
@@ -69,6 +71,7 @@ const EditCategory = () => {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: category?.name || "",
+			titleLine: category?.titleLine || "",
 			description: category?.description || "",
 			file: "",
 		},
@@ -112,14 +115,14 @@ const EditCategory = () => {
 
 		// first upload the image to the server
 		if (uFile) {
-			const imageUrl = await uploadImage();
+			const imageURL = await uploadImage();
 			setCategory({
 				...category,
-				imageUrl,
+				imageURL,
 			});
-			data.file = imageUrl;
+			data.file = imageURL;
 		} else {
-			data.file = category.imageUrl;
+			data.file = category.imageURL;
 		}
 
 		// then edit the category
@@ -187,6 +190,33 @@ const EditCategory = () => {
 						/>
 						<FormField
 							control={form.control}
+							name="titleLine"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Title Line</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="Title Line"
+											{...field}
+											value={category?.titleLine}
+											className="text-black"
+											onChange={(e) => {
+												setCategory({
+													...category,
+													titleLine: e.target.value,
+												});
+											}}
+										/>
+									</FormControl>
+									<FormDescription>
+										This is your public display title line.
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
 							name="description"
 							render={({ field }) => (
 								<FormItem>
@@ -222,7 +252,7 @@ const EditCategory = () => {
 										<Input
 											type="file"
 											{...field}
-											value={category?.imageUrl}
+											value={category?.imageURL}
 											className="text-black"
 											onChange={fileChangeHandler}
 										/>

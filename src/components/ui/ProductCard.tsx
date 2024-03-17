@@ -1,14 +1,12 @@
 import { useState } from "react";
 
-import BX_NewPlumpShot from "@/assets/prod_imgs/BX_NewPlumpShot_PDP_Silo_Texture_DreamyDolly_3000x3000.webp";
+import BX_NewPlumpShot from "@/assets/prod_imgs/BX_NewPlumpShot_PDP_Silo_Texture_DreamyDolly.webp";
 import { Badge } from "@/components/ui/badge";
 
-import { products } from "@/lib/types";
+import { ProductsProps } from "@/lib/types";
 import React from "react";
 
-interface props extends products {}
-
-const ProductCard: React.FC<props> = ({ ...props }) => {
+const ProductCard: React.FC<ProductsProps> = ({ ...props }) => {
 	const [focusName, setFocusName] = useState("");
 	const lipsColorCodes = props.shades;
 	return (
@@ -17,14 +15,18 @@ const ProductCard: React.FC<props> = ({ ...props }) => {
 			<div className="relative transition duration-600 ease-in-out h-full bg-white text-black p-5 rounded-2xl">
 				<div className="relative w-96">
 					<img
-						src={props.imageUrl ? props.imageUrl : BX_NewPlumpShot}
+						src={
+							props.images[0].imageURLs
+								? props.images[0].imageURLs
+								: BX_NewPlumpShot
+						}
 						alt={props.name}
 						className="object-center w-full h-96 rounded-xl"
 					/>
 					<div className="absolute top-2 space-x-2">
 						{props.badges.map((badge) => (
-							<Badge key={badge} className="font-bold text-sm">
-								{badge}
+							<Badge key={badge.id} className="font-bold text-sm">
+								{badge.name}
 							</Badge>
 						))}
 					</div>
@@ -44,7 +46,7 @@ const ProductCard: React.FC<props> = ({ ...props }) => {
 									data-sku="43000031137"
 									data-title={color.name}
 									data-price="$29.00"
-									data-description={color.color}
+									data-description={color.code}
 									onFocus={() => setFocusName(color.name)}
 									className={`repeat-x bg-center bg-cover w-8 h-8 rounded-full border-focus-2 border-transparent focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 p-2`}
 									style={{
@@ -75,8 +77,8 @@ const ProductCard: React.FC<props> = ({ ...props }) => {
 						</p>
 						<div className="flex flex-wrap text-gray-600">
 							{props.tags.slice(0, 5).map((tag, index) => (
-								<React.Fragment key={tag}>
-									<span>{tag}</span>
+								<React.Fragment key={tag.id}>
+									<span>{tag.name}</span>
 									{index < props.tags.length - 1 && (
 										<span>, </span>
 									)}

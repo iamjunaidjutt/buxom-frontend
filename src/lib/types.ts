@@ -6,15 +6,11 @@ export interface ModalProps {
 }
 
 export interface CategoriesProps {
-	id: string;
+	id?: string;
 	name: string;
-	description: string;
-	imageUrl: string;
-}
-
-export interface ProductsHeaderProps {
-	category: CategoriesProps;
 	titleLine?: string;
+	description: string;
+	imageURL: string;
 }
 
 export interface BadgesProps {

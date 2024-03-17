@@ -25,6 +25,7 @@ const formSchema = z.object({
 			message: "Name should be at least 2 characters",
 		})
 		.max(50),
+	titleLine: z.string().optional(),
 	description: z
 		.string()
 		.min(7, {
@@ -42,6 +43,7 @@ const CreateCategory = () => {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
+			titleLine: "",
 			description: "",
 			file: "",
 		},
@@ -124,6 +126,26 @@ const CreateCategory = () => {
 									</FormControl>
 									<FormDescription>
 										This is your public display name.
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="titleLine"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Title Line</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="Title Line"
+											{...field}
+											className="text-black"
+										/>
+									</FormControl>
+									<FormDescription>
+										This is your public display title line.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>

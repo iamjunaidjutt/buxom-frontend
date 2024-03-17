@@ -41,6 +41,13 @@ const columns: ColumnDef<CategoriesProps>[] = [
 		header: "Name",
 	},
 	{
+		accessorKey: "titleLine",
+		header: "Title Line",
+		cell: ({ row }) => {
+			return row.getValue("titleLine") || "Not Set";
+		},
+	},
+	{
 		accessorKey: "description",
 		header: "Description",
 	},

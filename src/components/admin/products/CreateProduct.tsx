@@ -31,6 +31,7 @@ import {
 } from "@/lib/types";
 import toast from "react-hot-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
 	name: z
@@ -69,6 +70,7 @@ const formSchema = z.object({
 });
 
 const CreateProduct = () => {
+	const navigate = useNavigate();
 	const [categories, setCategories] = useState<CategoriesProps[]>([]);
 	const [tags, setTags] = useState<TagsProps[]>([]);
 	const [badges, setBadges] = useState<BadgesProps[]>([]);
@@ -172,6 +174,7 @@ const CreateProduct = () => {
 				console.log(responseData);
 				toast.success("Product created successfully");
 				form.reset();
+				navigate("/admin/products");
 			}
 		} catch (error) {
 			console.error(error);

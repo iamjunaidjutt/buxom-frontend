@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import ProductCard from "@/components/ui/ProductCard";
-import { products } from "@/lib/types";
+import { ProductsProps, products } from "@/lib/types";
 import {
 	Carousel,
 	CarouselContent,
@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/carousel";
 
 const ProductSection = () => {
-	const [data, setData] = useState<products[]>();
+	const [products, setProducts] = useState<ProductsProps[]>();
 	const fetchProducts = async () => {
 		try {
 			const res = await fetch("http://localhost:8080/products");
 			const data = await res.json();
-			setData(data.products);
+			setProducts(data);
 			console.log(data);
 		} catch (error) {
 			console.log(error);
@@ -39,7 +39,7 @@ const ProductSection = () => {
 					<CarouselPrevious className="bg-neutral text-white border-1 border-white hover:bg-neutral hover:text-white" />
 					<CarouselNext className="bg-neutral text-white border-0 hover:bg-neutral hover:text-white" />
 					<CarouselContent>
-						{data?.map((product) => (
+						{products?.map((product) => (
 							<CarouselItem
 								key={product.id}
 								className="md:basis-1/2 lg:basis-1/3"
