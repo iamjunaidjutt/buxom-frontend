@@ -6,10 +6,12 @@ import BX_1Q24_Homepage_Hero from "@/assets/img/BX_1Q24_VDay_HP_D.webp";
 
 import GlowingCardWrapper from "@/components/ui/GlowingCardWrapper";
 import SecondaryBtn from "@/components/ui/SecondaryBtn";
+import { useNavigate } from "react-router-dom";
 
 const LandingSection = () => {
 	const { scrollY } = useScroll();
 	const [scaleUp, setScaleUp] = useState(false);
+	const navigate = useNavigate();
 
 	useMotionValueEvent(scrollY, "change", (latest) => {
 		if (latest > 100 && latest < 1100) {
@@ -50,7 +52,12 @@ const LandingSection = () => {
 							FREE Shipping when you spend $40+. Select gifts in
 							cart.
 						</p>
-						<SecondaryBtn>SHOP NOW</SecondaryBtn>
+						<SecondaryBtn
+							type="button"
+							onClick={() => navigate("/products")}
+						>
+							SHOP NOW
+						</SecondaryBtn>
 					</div>
 				</div>
 			</GlowingCardWrapper>
@@ -85,7 +92,12 @@ const LandingSection = () => {
 							hypnotic, color-shifting shades. Get Free Shipping
 							with any Plump Shot™ purchase!
 						</p>
-						<SecondaryBtn>SHOP NOW</SecondaryBtn>
+						<SecondaryBtn
+							type="button"
+							onClick={() => navigate("/products")}
+						>
+							SHOP NOW
+						</SecondaryBtn>
 					</div>
 				</div>
 			</GlowingCardWrapper>

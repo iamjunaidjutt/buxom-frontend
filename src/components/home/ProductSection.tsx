@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import ProductCard from "@/components/ui/ProductCard";
-import { ProductsProps, products } from "@/lib/types";
+import { ProductsProps } from "@/lib/types";
 import {
 	Carousel,
 	CarouselContent,
@@ -9,12 +9,22 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useParams } from "react-router-dom";
 
 const ProductSection = () => {
+	const params = useParams();
+	const id = params.id ? params.id : null;
 	const [products, setProducts] = useState<ProductsProps[]>();
 	const fetchProducts = async () => {
+		let res;
 		try {
-			const res = await fetch("http://localhost:8080/products");
+			if (id) {
+				res = await fetch(
+					`http://localhost:8080/products/category/${id}`
+				);
+			} else {
+				res = await fetch("http://localhost:8080/products");
+			}
 			const data = await res.json();
 			setProducts(data);
 			console.log(data);
@@ -33,6 +43,7 @@ const ProductSection = () => {
 				<Carousel
 					opts={{
 						align: "start",
+						loop: true,
 					}}
 					className="w-full"
 				>

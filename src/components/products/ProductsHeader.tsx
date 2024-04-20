@@ -4,14 +4,19 @@ import ProductsShowcase from "@/components/products/ProductsShowcase";
 
 const ProductsHeader: React.FC<CategoriesProps> = ({
 	name,
-	titleLine,
-	description,
 	imageURL,
+	description,
+	titleLine,
 }) => {
 	return (
 		<div className="relative">
-			<img src={imageURL} alt={name} />
-			<section className="absolute top-44 space-y-2 left-16 w-1/2">
+			<img
+				src={`http://localhost:8080${imageURL}`}
+				alt={name}
+				className="w-full object-cover h-[27rem]"
+			/>
+			<div className="absolute top-0 left-0 w-full h-full bg-black opacity-20" />
+			<section className="absolute top-36 z-50 space-y-2 left-16 w-1/2">
 				<p className="font-bold text-sm tracking-widest">{titleLine}</p>
 				<h1 className="font-extrabold font-nunitoSans text-8xl">
 					{name}

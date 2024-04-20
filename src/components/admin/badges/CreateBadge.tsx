@@ -23,6 +23,9 @@ const formSchema = z.object({
 			message: "Name should be at least 2 characters",
 		})
 		.max(50),
+	color: z
+		.string()
+		.min(6, { message: "Code should be at least 6 characters" }),
 });
 
 const CreateBadge = () => {
@@ -31,6 +34,7 @@ const CreateBadge = () => {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
+			color: "000000",
 		},
 	});
 
@@ -85,6 +89,27 @@ const CreateBadge = () => {
 									</FormControl>
 									<FormDescription>
 										This is your public display name.
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="color"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Color Code</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="Color Code"
+											{...field}
+											className="text-black"
+										/>
+									</FormControl>
+									<FormDescription>
+										This is your public display hex color
+										code.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>

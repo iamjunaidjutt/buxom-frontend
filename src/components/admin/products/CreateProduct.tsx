@@ -67,6 +67,7 @@ const formSchema = z.object({
 	images: z.array(z.string()).refine((image) => image.length > 0, {
 		message: "Please select at least one image",
 	}),
+	thumbnail: z.string(),
 });
 
 const CreateProduct = () => {
@@ -152,6 +153,7 @@ const CreateProduct = () => {
 			badges: [],
 			shades: [],
 			images: [],
+			thumbnail: "",
 		},
 	});
 
@@ -561,6 +563,46 @@ const CreateProduct = () => {
 											)}
 										/>
 									))}
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="thumbnail"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Thumbnail</FormLabel>
+									<FormControl>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<SelectTrigger
+												className="text-black h-32"
+												{...field}
+											>
+												<SelectValue placeholder="Category" />
+											</SelectTrigger>
+											<SelectContent>
+												{images.map((image) => (
+													<SelectItem
+														key={image.id}
+														value={image.imageURLs}
+													>
+														<img
+															src={`http://localhost:8080${image.imageURLs}`}
+															alt="thumbnail"
+															className="w-auto h-28 object-cover"
+														/>
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</FormControl>
+									<FormDescription>
+										Select the thumbnail for the product.
+									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}

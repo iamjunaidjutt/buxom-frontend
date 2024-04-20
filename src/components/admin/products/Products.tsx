@@ -129,6 +129,20 @@ const columns: ColumnDef<ProductsProps>[] = [
 		},
 	},
 	{
+		accessorKey: "thumbnail",
+		header: "Thumbnail",
+		cell: ({ row }) => {
+			const thumbnail: string = row.getValue("thumbnail");
+			return (
+				<img
+					src={`http://localhost:8080/${thumbnail}`}
+					alt={row.original.name}
+					className="h-20 w-auto object-cover rounded-md"
+				/>
+			);
+		},
+	},
+	{
 		accessorKey: "Image",
 		header: "Images",
 		cell: ({ row }) => {

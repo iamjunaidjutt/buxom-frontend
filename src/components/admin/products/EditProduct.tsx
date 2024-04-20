@@ -56,18 +56,19 @@ const formSchema = z.object({
 	stock: z.number().min(1, {
 		message: "Stock should be at least 1",
 	}),
-	tags: z.array(z.string()).refine((tag) => tag.length > 0, {
+	Tags: z.array(z.string()).refine((tag) => tag.length > 0, {
 		message: "Please select at least one tag",
 	}),
-	badges: z.array(z.string()).refine((badge) => badge.length > 0, {
+	Badges: z.array(z.string()).refine((badge) => badge.length > 0, {
 		message: "Please select at least one badge",
 	}),
 	shades: z.array(z.string()).refine((shade) => shade.length > 0, {
 		message: "Please select at least one shade",
 	}),
-	images: z.array(z.string()).refine((image) => image.length > 0, {
+	Image: z.array(z.string()).refine((image) => image.length > 0, {
 		message: "Please select at least one image",
 	}),
+	thumbnail: z.string(),
 });
 
 const EditProduct = () => {
@@ -146,10 +147,10 @@ const EditProduct = () => {
 			console.log(data);
 			setProduct({
 				...data,
-				tags: data.Tags.map((tag: TagsProps) => tag.id),
-				badges: data.Badges.map((badge: BadgesProps) => badge.id),
+				Tags: data.Tags.map((tag: TagsProps) => tag.id),
+				Badges: data.Badges.map((badge: BadgesProps) => badge.id),
 				shades: data.shades.map((shade: ShadesProps) => shade.id),
-				images: data.Image.map((image: ImagesProps) => image.id),
+				Image: data.Image.map((image: ImagesProps) => image.id),
 			});
 		} catch (error) {
 			console.error(error);
@@ -174,10 +175,11 @@ const EditProduct = () => {
 			description: product?.description,
 			price: product?.price,
 			stock: product?.stock,
-			tags: product?.tags.map((tag) => tag.id),
-			badges: product?.badges.map((badge) => badge.id),
+			Tags: product?.Tags.map((tag) => tag.id),
+			Badges: product?.Badges.map((badge) => badge.id),
 			shades: product?.shades.map((shade) => shade.id),
-			images: product?.images.map((image) => image.id),
+			Image: product?.Image.map((image) => image.id),
+			thumbnail: product?.thumbnail,
 		},
 	});
 
@@ -188,10 +190,11 @@ const EditProduct = () => {
 			form.setValue("description", product.description);
 			form.setValue("price", product.price);
 			form.setValue("stock", product.stock);
-			form.setValue("tags", product.tags);
-			form.setValue("badges", product.badges);
+			form.setValue("Tags", product.Tags);
+			form.setValue("Badges", product.Badges);
 			form.setValue("shades", product.shades);
-			form.setValue("images", product.images);
+			form.setValue("Image", product.Image);
+			form.setValue("thumbnail", product.thumbnail);
 		}
 	}, [form, product]);
 
@@ -390,7 +393,7 @@ const EditProduct = () => {
 						/>
 						<FormField
 							control={form.control}
-							name="tags"
+							name="Tags"
 							render={() => (
 								<FormItem>
 									<div>
@@ -404,7 +407,7 @@ const EditProduct = () => {
 										<FormField
 											key={tag.id}
 											control={form.control}
-											name={`tags`}
+											name={`Tags`}
 											render={({ field }) => (
 												<FormItem
 													key={tag.id}
@@ -452,7 +455,7 @@ const EditProduct = () => {
 						/>
 						<FormField
 							control={form.control}
-							name="badges"
+							name="Badges"
 							render={() => (
 								<FormItem>
 									<div>
@@ -466,7 +469,7 @@ const EditProduct = () => {
 										<FormField
 											key={badge.id}
 											control={form.control}
-											name={`badges`}
+											name={`Badges`}
 											render={({ field }) => (
 												<FormItem
 													key={badge.id}
@@ -576,7 +579,7 @@ const EditProduct = () => {
 						/>
 						<FormField
 							control={form.control}
-							name="images"
+							name="Image"
 							render={() => (
 								<FormItem>
 									<div>
@@ -590,7 +593,7 @@ const EditProduct = () => {
 										<FormField
 											key={image.id}
 											control={form.control}
-											name={`images`}
+											name={`Image`}
 											render={({ field }) => (
 												<FormItem
 													key={image.id}
@@ -636,6 +639,51 @@ const EditProduct = () => {
 											)}
 										/>
 									))}
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="thumbnail"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Thumbnail</FormLabel>
+									<FormControl>
+										<Select
+											onValueChange={(value) => {
+												form.setValue(
+													"thumbnail",
+													value
+												);
+											}}
+											defaultValue={field.value}
+										>
+											<SelectTrigger
+												className="text-black h-32"
+												{...field}
+											>
+												<SelectValue placeholder="thumbail" />
+											</SelectTrigger>
+											<SelectContent>
+												{images.map((image) => (
+													<SelectItem
+														key={image.id}
+														value={image.imageURLs}
+													>
+														<img
+															src={`http://localhost:8080${image.imageURLs}`}
+															alt="thumbnail"
+															className="w-auto h-28 object-cover"
+														/>
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</FormControl>
+									<FormDescription>
+										Select the thumbnail for the product.
+									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}

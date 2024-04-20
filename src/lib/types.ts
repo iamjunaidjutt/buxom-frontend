@@ -16,6 +16,7 @@ export interface CategoriesProps {
 export interface BadgesProps {
 	id: string;
 	name: string;
+	color?: string;
 }
 
 export interface TagsProps {
@@ -39,14 +40,15 @@ export interface ProductsProps {
 	id: string;
 	name: string;
 	description: string;
+	thumbnail: string;
 	price: number;
 	discount: number;
 	stock: number;
 	category: CategoriesProps;
-	images: ImagesProps[];
+	Image: ImagesProps[];
 	shades: ShadesProps[];
-	tags: TagsProps[];
-	badges: BadgesProps[];
+	Tags: TagsProps[];
+	Badges: BadgesProps[];
 }
 
 export interface OrdersProps {

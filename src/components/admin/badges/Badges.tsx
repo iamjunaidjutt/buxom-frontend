@@ -42,6 +42,19 @@ const columns: ColumnDef<BadgesProps>[] = [
 		header: "Name",
 	},
 	{
+		accessorKey: "color",
+		header: "Color",
+		cell: ({ row }) => {
+			const color = "#" + row.original.color;
+			return (
+				<div
+					className="w-8 h-8 rounded-full"
+					style={{ backgroundColor: color }}
+				></div>
+			);
+		},
+	},
+	{
 		accessorKey: "actions",
 		header: "Actions",
 		cell: ({ row }) => {

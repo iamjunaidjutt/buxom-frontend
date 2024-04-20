@@ -25,6 +25,7 @@ const formSchema = z.object({
 			message: "Name should be at least 2 characters",
 		})
 		.max(50),
+	color: z.string().optional(),
 });
 
 const EditBadge = () => {
@@ -32,6 +33,7 @@ const EditBadge = () => {
 	const [badge, setBadge] = useState<BadgesProps>({
 		id: "",
 		name: "",
+		color: "",
 	});
 	const params = useParams();
 
@@ -56,6 +58,7 @@ const EditBadge = () => {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
+			color: "000000",
 		},
 	});
 
@@ -64,7 +67,7 @@ const EditBadge = () => {
 		try {
 			// then create the category
 			const response = await fetch(
-				"http://localhost:8080/badges/update" + params.id,
+				"http://localhost:8080/badges/update/" + params.id,
 				{
 					method: "PUT",
 					headers: {
@@ -122,11 +125,41 @@ const EditBadge = () => {
 								</FormItem>
 							)}
 						/>
+						<FormField
+							control={form.control}
+							name="color"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Color Code</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="Color Code"
+											{...field}
+											className="text-black"
+											value={badge.color}
+											onChange={(e) =>
+												setBadge({
+													...badge,
+													color: e.target.value,
+												})
+											}
+										/>
+									</FormControl>
+									<FormDescription>
+										This is the color code for the badge.
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 						<Button
 							type="submit"
 							variant={"outline"}
 							className="text-black"
-							onClick={() => form.setValue("name", badge.name)}
+							onClick={() => {
+								form.setValue("name", badge.name),
+									form.setValue("color", badge.color);
+							}}
 						>
 							Edit Badge
 						</Button>

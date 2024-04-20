@@ -41,6 +41,7 @@ import EditImage from "@/components/admin/images/EditImage";
 import AllUsers from "@/components/admin/users/Users";
 import CreateUser from "@/components/admin/users/CreateUser";
 import EditUser from "@/components/admin/users/EditUser";
+import ProductDetails from "@/components/products/ProductDetails";
 
 const router = createBrowserRouter([
 	{
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
 				children: [
 					{ index: true, element: <Products /> },
 					{ path: "category/:id", element: <Products /> },
+					{ path: ":id", element: <ProductDetails /> },
 				],
 			},
 		],
