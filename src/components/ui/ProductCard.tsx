@@ -4,11 +4,18 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ProductsProps } from "@/lib/types";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/features/CartSlice";
+
+import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 
 const ProductCard: React.FC<ProductsProps> = ({ ...product }) => {
 	const [focusName, setFocusName] = useState("");
+	const dispatch = useDispatch();
+	const [quantity, setQuantity] = useState(1);
+
 	return (
-		<div className="relative group w-[28rem] h-[50rem] m-5 font-nunitoSans">
+		<div className="relative group w-[28rem] h-[51rem] m-5 font-nunitoSans">
 			<div className="absolute -inset-2 rounded-2xl bg-pink blur opacity-0 group-hover:opacity-100 transition duration-500 ease-in-out"></div>
 			<div className="relative transition duration-600 ease-in-out h-full bg-white text-black p-5 rounded-2xl">
 				<div className="relative w-96">
@@ -96,8 +103,41 @@ const ProductCard: React.FC<ProductsProps> = ({ ...product }) => {
 						<p className="font-extrabold text-base">
 							${product.price}
 						</p>
+						<div className="flex items-center space-x-2">
+							<button
+								onClick={() => {
+									if (quantity > 1) {
+										setQuantity(quantity - 1);
+									}
+								}}
+							>
+								<CiCircleMinus size={25} />
+							</button>
+							<span>{quantity}</span>
+							<button
+								onClick={() => {
+									setQuantity(quantity + 1);
+								}}
+							>
+								<CiCirclePlus size={25} />
+							</button>
+						</div>
 					</div>
-					<button className="border border-black hover:bg-black hover:text-white transition duration-300 p-5 w-full rounded-full flex items-center justify-between">
+					<button
+						className="border border-black hover:bg-black hover:text-white transition duration-300 p-5 w-full rounded-full flex items-center justify-between"
+						onClick={() => {
+							dispatch(
+								addToCart({
+									id: product.id,
+									itemPrice: product.price,
+									itemName: product.name,
+									thumbnail: product.thumbnail,
+									quantity,
+									totalPrice: product.price * quantity,
+								})
+							);
+						}}
+					>
 						<span className="font-extrabold">ADD TO BAG</span>
 						<span className="text-xl font-bold">+</span>
 					</button>

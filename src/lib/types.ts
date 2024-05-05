@@ -3,7 +3,7 @@ export interface ModalProps {
 	show: boolean;
 	onClose: () => void;
 	children?: React.ReactNode;
-}
+} 
 
 export interface CategoriesProps {
 	id?: string;
@@ -83,4 +83,20 @@ export interface UserPreferenceProps {
 	day: number;
 	newsLetter: boolean;
 	smsUpdates: boolean;
+}
+
+export interface CartState {
+	cartItems: CartItem[];
+	cartTotalPrice: number;
+	cartTotalQuantity: number;
+}
+
+export interface CartItem { // Define types for your item and payload
+	id: string;
+	// Define other properties of your cart item
+	itemName: string;
+	itemPrice: number;
+	thumbnail: string;
+	quantity: number;
+	totalPrice: number;
 }

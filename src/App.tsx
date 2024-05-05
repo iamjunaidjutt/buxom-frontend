@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { Provider } from "react-redux";
 
 import Home from "@/pages/Home";
 import About from "@/pages/About";
@@ -42,6 +43,8 @@ import AllUsers from "@/components/admin/users/Users";
 import CreateUser from "@/components/admin/users/CreateUser";
 import EditUser from "@/components/admin/users/EditUser";
 import ProductDetails from "@/components/products/ProductDetails";
+
+import store from "@/app/store";
 
 const router = createBrowserRouter([
 	{
@@ -140,8 +143,10 @@ const router = createBrowserRouter([
 export default function App() {
 	return (
 		<>
-			<Toaster position="top-center" reverseOrder={false} />
-			<RouterProvider router={router} />
+			<Provider store={store}>
+				<Toaster position="top-center" reverseOrder={false} />
+				<RouterProvider router={router} />
+			</Provider>
 		</>
 	);
 }
