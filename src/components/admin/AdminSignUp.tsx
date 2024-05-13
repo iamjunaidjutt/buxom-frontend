@@ -77,6 +77,7 @@ const AdminSignUp = () => {
 			}
 
 			// If successful, then redirect to admin
+			toast.success("Sign up successful");
 			navigate("/admin");
 		} catch (error) {
 			// TODO: If there's an error, then display the error message

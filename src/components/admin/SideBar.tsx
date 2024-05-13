@@ -11,8 +11,11 @@ import {
 	MdVerticalShades,
 } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "@/features/authSlice";
 
 const SideBar = () => {
+	const dispatch = useDispatch();
 	const [open, setOpen] = useState<{
 		products: boolean;
 	}>({
@@ -147,6 +150,7 @@ const SideBar = () => {
 					<Link
 						to="/admin"
 						className="flex items-center gap-2 text-lg font-semibold"
+						onClick={() => dispatch(logout())}
 					>
 						<FaSignOutAlt size={20} />
 						Sign Out

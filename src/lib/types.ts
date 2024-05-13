@@ -100,3 +100,8 @@ export interface CartItem { // Define types for your item and payload
 	quantity: number;
 	totalPrice: number;
 }
+
+export interface authProps {
+	isLogin: boolean;
+	user: UsersProps;
+}

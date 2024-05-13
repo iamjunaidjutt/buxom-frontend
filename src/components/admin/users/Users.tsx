@@ -149,6 +149,12 @@ const Users = () => {
 		try {
 			// fetch users
 			const response = await fetch("http://localhost:8080/users");
+			if (!response.ok) {
+				if (response.status === 401) {
+					toast.error("Unauthorized");
+					return;
+				}
+			}
 			const data = await response.json();
 			setUsers(data);
 			console.log(data);

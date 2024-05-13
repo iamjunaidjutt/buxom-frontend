@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { login } from "@/features/authSlice";
 
 const formSchema = z.object({
 	email: z.string().email(),
@@ -28,6 +30,7 @@ const formSchema = z.object({
 
 const AdminSignIn = () => {
 	const naviagate = useNavigate();
+	const dispatch = useDispatch();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -70,8 +73,12 @@ const AdminSignIn = () => {
 				}
 			}
 
+			console.log(response);
+
 			// If successful, then redirect to admin dashboard
+
 			naviagate("/admin/dashboard");
+			dispatch(login(data));
 		} catch (error) {
 			// TODO: If there's an error, then display the error message
 			toast.error("An error occurred while trying to sign in");

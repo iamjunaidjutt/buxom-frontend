@@ -11,8 +11,14 @@ import Autoplay from "embla-carousel-autoplay";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import SupportMenu from "@/components/home/SupportMenu";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "@/features/authSlice";
 
 const MainBar = () => {
+	const isAutenticated = useSelector(
+		(state: any) => state.auth.isAuthenticated
+	);
+	const dispatch = useDispatch();
 	const [isClicked, setIsClicked] = useState<boolean>(false);
 	const items = [
 		{
@@ -60,12 +66,22 @@ const MainBar = () => {
 				</Carousel>
 			</div>
 			<div className="ml-[18rem]">
-				<Link
-					to="/sign-in"
-					className="text-sm font-medium text-center text-white hover:text-gray-300"
-				>
-					Sign&nbsp;In
-				</Link>
+				{!isAutenticated ? (
+					<Link
+						to="/sign-in"
+						className="text-sm font-medium text-center text-white hover:text-gray-300"
+					>
+						Sign&nbsp;In
+					</Link>
+				) : (
+					<Link
+						to="#"
+						className="text-sm font-medium text-center text-white hover:text-gray-300"
+						onClick={() => dispatch(logout())}
+					>
+						Logout
+					</Link>
+				)}
 				<span className="text-sm font-medium text-center text-white mx-3">
 					|
 				</span>

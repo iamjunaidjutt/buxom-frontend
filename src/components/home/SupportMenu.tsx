@@ -18,7 +18,7 @@ const SupportMenu = () => {
 				</Link>
 				<Link to="/contact-us" className="hover:stroke">
 					CONTACT US
-				</Link>
+				</Link>{" "}
 			</div>
 		</div>
 	);
