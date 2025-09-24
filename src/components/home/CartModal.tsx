@@ -1,39 +1,25 @@
-import { CartItem, CartState, ModalProps } from "@/lib/types";
+import { CartItem, ModalProps } from "@/lib/types";
 import { useSelector, useDispatch } from "react-redux";
 import { RxCross2 } from "react-icons/rx";
 import {
-	clearCart,
 	decreaseItemQuantity,
 	increaseItemQuantity,
 } from "@/features/CartSlice";
+import CheckoutButton from "../checkout/CheckoutButton";
+import { RootState } from "@/app/store";
 
 interface Props extends ModalProps {}
 
 const CartModal: React.FC<Props> = ({ show, onClose }) => {
 	const dispatch = useDispatch();
 	const { cartItems, cartTotalPrice, cartTotalQuantity } = useSelector(
-		(state: CartState) => state.cart
+		(state: RootState) => state.cart
 	);
 
-	// const handleCheckout = async () => {
-	// 	const cartItems = cartItems.map((item) => ({
-	// 		itemId: item.id,
-	// 		quantity: item.quantity,
-	// 	}));
-	// 	const response = await fetch("http://localhost:8080/checkout", {
-	// 		method: "POST",
-	// 		headers: {
-	// 			"Content-Type": "application/json",
-	// 		},
-	// 		body: JSON.stringify(cartItems),
-	// 	});
-
-	// 	if (response.ok) {
-	// 		console.log("Checkout successful");
-	// 	}
-
-	// 	dispatch(clearCart());
-	// };
+	const handleCheckoutStart = () => {
+		// Optional: Close the cart modal when checkout starts
+		onClose();
+	};
 
 	if (!show) return null;
 
@@ -124,12 +110,13 @@ const CartModal: React.FC<Props> = ({ show, onClose }) => {
 									${cartTotalPrice ? cartTotalPrice : 0}
 								</h1>
 							</div>
-							<button
-								className="bg-white text-black font-bold mx-12 px-4 py-2 rounded-lg border border-white hover:bg-black hover:text-white"
-								onClick={handleCheckout}
-							>
-								CHECKOUT
-							</button>
+							<div className="mx-12">
+								<CheckoutButton
+									cartItems={cartItems}
+									onCheckoutStart={handleCheckoutStart}
+									className="bg-white text-black font-bold px-4 py-2 rounded-lg border border-white hover:bg-black hover:text-white"
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
